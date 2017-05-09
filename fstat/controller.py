@@ -1,7 +1,7 @@
 from collections import Counter
 from flask import render_template, redirect, url_for
 from fstat import app, db
-from fstat.lib import x_days_ago
+from fstat.lib import x_weeks_ago
 from model import Failure, FailureInstance
 from datetime import datetime
 
@@ -15,7 +15,7 @@ def index():
 def weekly_overall_summary(num=None):
     if num > 12:
         num = 12
-    cut_off_date = (x_days_ago(num*7))
+    cut_off_date = (x_weeks_ago(num*7))
     failure_instances = FailureInstance.query.filter(
             FailureInstance.timestamp > cut_off_date)
     failures = Counter([x.failure for x in failure_instances])
@@ -33,7 +33,7 @@ def weekly_instance_summary(num=None, fid=None):
     if num > 4:
         num = 4
     fid = int(fid)
-    cut_off_date = (x_days_ago(num*7))
+    cut_off_date = (x_weeks_ago(num*7))
     print cut_off_date
     failure = Failure.query.filter_by(id=fid).first_or_404()
     failure_instances = FailureInstance.query.filter(

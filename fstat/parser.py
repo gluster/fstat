@@ -42,7 +42,7 @@ def get_summary(job_name, num_days):
     '''
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     cut_off_date = datetime.today() - timedelta(days=num_days)
-    for page in xrange(0, app.config['JENKINS_MAX'], 100):
+    for page in range(0, app.config['JENKINS_MAX'], 100):
         build_info = requests.get(''.join([
                 app.config['JENKINS_URL'],
                 '/job/',

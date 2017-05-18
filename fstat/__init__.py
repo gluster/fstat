@@ -10,5 +10,5 @@ Bootstrap(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from controller import index  # noqa: E402,F401
-from model import Failure, FailureInstance  # noqa: E402,F401
+from fstat.controller import index
+from fstat.model import Failure, FailureInstance

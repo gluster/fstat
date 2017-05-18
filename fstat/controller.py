@@ -3,8 +3,8 @@ from collections import Counter
 from flask import render_template, redirect, url_for, request
 
 from fstat import app, db
-from model import Failure, FailureInstance
-from lib import parse_end_date, parse_start_date
+from fstat.lib import x_days_ago
+from fstat.model import Failure, FailureInstance
 
 
 @app.route("/")

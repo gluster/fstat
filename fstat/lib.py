@@ -27,8 +27,13 @@ def parse_end_date(end_date=None):
 
 def get_branch_list(fid=None):
     if not fid:
-        return db.session.query(FailureInstance.branch).distinct()
-    return db.session.query(FailureInstance.branch) \
-                     .filter(FailureInstance.failure_id == fid,
-                             FailureInstance.branch is not None) \
-                     .distinct()
+        return db.session.query(FailureInstance.branch) \
+                .filter(FailureInstance.branch != None) \
+                .order_by(FailureInstance.branch) \
+                .distinct()
+    else:
+        return db.session.query(FailureInstance.branch) \
+                .filter(FailureInstance.failure_id == fid,
+                        FailureInstance.branch != None) \
+                .order_by(FailureInstance.branch) \
+                .distinct()

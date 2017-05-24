@@ -30,10 +30,10 @@ def get_branch_list(fid=None):
         return db.session.query(FailureInstance.branch) \
                 .filter(FailureInstance.branch != None) \
                 .order_by(FailureInstance.branch) \
-                .distinct()
+                .distinct()  # noqa: 711
     else:
         return db.session.query(FailureInstance.branch) \
                 .filter(FailureInstance.failure_id == fid,
                         FailureInstance.branch != None) \
                 .order_by(FailureInstance.branch) \
-                .distinct()
+                .distinct()  # noqa: 711

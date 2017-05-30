@@ -56,7 +56,7 @@ def get_summary(job_name, num_days):
             if datetime.fromtimestamp(build['timestamp']/1000) < cut_off_date:
                 # stop when timestamp older than cut off date
                 return
-            if build['result'] not in [None, 'SUCCESS']:
+            if build['result'] not in [None, 'SUCCESS', 'ABORTED']:
                 url = ''.join([build['url'], 'consoleText'])
                 if not FailureInstance.query.filter_by(url=url).first():
                     process_failure(url, job_name, build)

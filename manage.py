@@ -12,11 +12,6 @@ manager.add_command('runserver', Server())
 manager.add_command('db', MigrateCommand)
 
 
-@manager.command
-def db_init():
-    db.create_all()
-
-
 @manager.option('-n', dest='num_days')
 @manager.option('-j', '--job', dest='job_name')
 def process_jobs(job_name, num_days):

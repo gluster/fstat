@@ -3,7 +3,7 @@
 from flask_script import Server, Manager
 from flask_migrate import MigrateCommand
 
-from fstat import app, db
+from fstat import app
 from fstat.parser import get_summary
 
 

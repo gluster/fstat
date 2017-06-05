@@ -1,4 +1,4 @@
-"""empty message
+"""Add a column to track patchset and review
 
 Revision ID: 00bd302603db
 Revises: 4636a19d11e9

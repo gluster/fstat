@@ -1,4 +1,4 @@
-"""empty message
+"""Add an index for failure_instance url
 
 Revision ID: e9b5f1e6ad2b
 Revises: 4d7e4aa31f4f

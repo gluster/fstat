@@ -1,4 +1,4 @@
-"""empty message
+"""Add a unique constraint for url and failure_id
 
 Revision ID: 4636a19d11e9
 Revises: 52c8de6a0875

@@ -1,7 +1,7 @@
-"""empty message
+"""Initial conversion to alembic
 
 Revision ID: 52c8de6a0875
-Revises: 
+Revises:
 Create Date: 2016-11-21 12:46:43.870241
 
 """

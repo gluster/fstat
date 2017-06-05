@@ -1,4 +1,4 @@
-"""empty message
+"""Add a column for branch information and index for review info
 
 Revision ID: 4d7e4aa31f4f
 Revises: 00bd302603db

@@ -1,4 +1,4 @@
-"""empty message
+"""Added Index for url
 
 Revision ID: e9b5f1e6ad2b
 Revises: 4d7e4aa31f4f
@@ -6,7 +6,6 @@ Create Date: 2017-05-26 13:37:05.984056
 
 """
 from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.

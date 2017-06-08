@@ -1,6 +1,6 @@
 from collections import Counter
 
-from flask import render_template, redirect, url_for, request, session, g
+from flask import render_template, redirect, url_for, request, session, g, jsonify
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User
@@ -56,6 +56,7 @@ def logout():
 
 
 @app.route('/summary')
+@app.route('/api/failures', endpoint='api:failures')
 def overall_summary():
     '''
     Shows overall summary
@@ -76,7 +77,17 @@ def overall_summary():
         filters.append(FailureInstance.branch == branch)
 
     failure_instances = FailureInstance.query.filter(*filters)
+
     failures = Counter([x.failure for x in failure_instances])
+    if request.endpoint == 'api:failures':
+        failures_ = []
+        for failure, count in failures.most_common():
+            failures_.append({
+                "signature": "http://git.gluster.org/cgit/glusterfs.git/tree/" + failure.signature,
+                "count": count
+            })
+        return jsonify({"response": failures_})
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
                            failures=failures,
@@ -87,6 +98,7 @@ def overall_summary():
 
 
 @app.route('/failure/<int:fid>')
+@app.route('/api/failure/<int:fid>', endpoint='api:failure_instances')
 def instance_summary(fid=None):
     '''
     Shows instance summary for particular failure
@@ -111,6 +123,10 @@ def instance_summary(fid=None):
         filters.append(FailureInstance.branch == branch)
 
     failure_instances = FailureInstance.query.filter(db.and_(*filters))
+    if request.endpoint == 'api:failure_instances':
+        failure_instances = [failure_instance.as_dict() for failure_instance in failure_instances]
+        return jsonify({"response": failure_instances})
+
     return render_template('failure_instance.html',
                            failure=failure,
                            branches=get_branch_list(fid),

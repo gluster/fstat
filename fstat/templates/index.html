@@ -59,7 +59,7 @@
               </div>
             {% endif %}
           </td>
-          <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ signature }}" target="_blank"><code>{{ failure["signature"] }}</code></a></td>
+          <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ failure["signature"] }}" target="_blank"><code>{{ failure["signature"] }}</code></a></td>
           <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=failure['id'], state=failure['state'],branch=request.args.get('branch', 'all')) }}">{{ failure["failure_count"] }}</a></td>
           <td>
             {% for bug in failure["bugs"] %}

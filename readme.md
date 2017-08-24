@@ -17,6 +17,8 @@ Fstat tracks the failures from build.gluster.org.
 
 ## Consuming fstat data via rest apis
 
+Host: https://fstat.gluster.org
+
 ###  ``` /api/failures ```
 This endpoint is used to get list of failures with the number of failure instances. The available filters for this endpoint are as follows:
 

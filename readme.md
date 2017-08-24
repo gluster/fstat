@@ -31,7 +31,7 @@ branch| filter for specific branch
 For Eg:
 
 ```
-GET /api/failures?start_date=2017-05-01&end_date=2017-08-01&branch=master
+GET https://fstat.gluster.org/api/failures?start_date=2017-05-01&end_date=2017-08-01&branch=master
 ```
 
 ### ``` /api/failures/<fid> ```
@@ -46,5 +46,5 @@ branch| filter for specific branch
 For Eg:
 
 ```
-GET /api/failures/1?start_date=2017-05-01&end_date=2017-08-01&branch=master
+GET https://fstat.gluster.org/api/failures/1?start_date=2017-05-01&end_date=2017-08-01&branch=master
 ```

@@ -33,17 +33,20 @@ def login():
 def authorized(oauth_token):
     session['token'] = oauth_token
     if oauth_token:
-        response_user_data = github.get('user')
-        user = User.query.filter_by(email=response_user_data['email']).first()
-        if not user:
+        user_data = github.get('user')
+        user = User.query.filter_by(username=user_data['login']).first()
+
+        # Create a new user
+        if user is None:
             user = User()
-            user.email = response_user_data['email']
-            user.username = response_user_data['login']
-            user.name = response_user_data['name']
-            user.profile_picture = response_user_data['avatar_url']
-            user.token = oauth_token
             db.session.add(user)
+
+        user.email = user_data['email']
+        user.username = user_data['login']
+        user.name = user_data['name']
+        user.profile_picture = user_data['avatar_url']
         user.token = oauth_token
+
         db.session.commit()
     return redirect('/')
 

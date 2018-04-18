@@ -14,7 +14,7 @@ class User(db.Model):
 class Failure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     signature = db.Column(db.String(1000), index=True)
-    state = db.Column(db.Integer)
+    type = db.Column(db.Integer, default=1)
     failures = db.relationship('FailureInstance',
                                backref='failure',
                                lazy='dynamic')

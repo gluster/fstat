@@ -99,7 +99,7 @@ def overall_summary():
     failures = Failure.query \
                       .with_entities(Failure.id, Failure.signature,
                                      func.count(Failure.id).label('failure_count'),
-                                     Failure.state) \
+                                     Failure.type) \
                       .filter(*filters).join(FailureInstance) \
                       .group_by(Failure.id) \
                       .order_by(desc("failure_count"), desc(Failure.id))

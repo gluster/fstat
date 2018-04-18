@@ -6,61 +6,75 @@ from sqlalchemy.exc import IntegrityError
 from fstat import app, db, Failure, FailureInstance
 
 
-STATE = (
-    None,
-    'SUCCESS',
-    'FAILURE',
-    'ABORTED',
-)
+TYPE = {
+    'NONE': 0,
+    'FAILURE': 1,
+    'TIMEOUT': 2,
+}
 
 
-def save_failure(signature, url, job_name, build_info):
-    failure = Failure.query.filter_by(signature=signature).first()
-    # If it doesn't exist, create a job first
-    if failure is None:
-        failure = Failure(signature=signature)
-        failure.state = STATE.index(build_info['result'])
+class FailureParser:
 
-    failure_instance = FailureInstance(url=url,
-                                       job_name=job_name)
-    failure_instance.process_build_info(build_info)
-    failure_instance.failure = failure
-    try:
-        db.session.add(failure)
-        db.session.add(failure_instance)
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
+    def __init__(self, build_info, job_name):
+        self.url = ''.join([build_info['url'], 'consoleText'])
+        self.job_name = job_name
+        self.build_info = build_info
 
+    def is_parsed(self):
+        if FailureInstance.query.filter_by(url=self.url).first():
+            return True
+        return False
 
-def process_failure(url, job_name, build_info):
-    text = requests.get(url, verify=False).text
-    accum = []
-    if text.find("Build timed out") and build_info['result'] == 'ABORTED':
-        lines = text.split('\n')
-        # Reversing the array to catch the last ran test because of which the run got aborted
-        lines.reverse()
-        for line in lines:
-            test_case = re.search(r'\./tests/.*\.t', line)
-            if test_case:
-                save_failure(test_case.group(), url, job_name, build_info)
-                break
-    else:
-        for t in text.split('\n'):
-            if t.find("Result: FAIL") != -1:
-                for t2 in accum:
-                    if t2.find("Wstat") != -1:
-                        test_case = re.search(r'\./tests/.*\.t', t2)
-                        if test_case:
-                            save_failure(test_case.group(), url, job_name,
-                                         build_info)
-                accum = []
-            if t.find("timed out after") != -1:
-                test_case = re.search(r'\./tests/.*\.t', t)
+    def process_failure(self):
+        if self.is_parsed():
+            return
+        text = requests.get(self.url, verify=False).text
+        for line in text.split('\n'):
+            # Failures are in this form:
+            # something.t (Wstat: 0 Tests: 26 Failed: 2)
+            #   Failed tests:  15, 22
+            # Files=1, Tests=26....
+            # Result: FAIL
+            #
+            # Every test we find goes into a variable called test_line first
+            if line.find("Wstat") != -1:
+                test_line = line
+
+            # If we find a line with failure, that means the test in the line we
+            # wrote to test_line failed.
+            if line.find("Result: FAIL") != -1:
+                test_case = re.search(r'\./tests/.*\.t', test_line)
                 if test_case:
-                    save_failure(test_case.group(), url, job_name, build_info)
-            else:
-                accum.append(t)
+                    self.save_failure(test_case.group(), type='FAILURE')
+            # If the test timed out the output looks like this:
+            #
+            # [20:43:46] Running tests in file something.t
+            # Timeout set is 800, default 200
+            # something.t timed out after 800 seconds
+            # something.t: bad status 124
+
+            if line.find("timed out after") != -1:
+                test_case = re.search(r'\./tests/.*\.t', line)
+                if test_case:
+                    self.save_failure(test_case.group(), type='TIMEOUT')
+
+    def save_failure(self, signature, type=None):
+        failure = Failure.query.filter_by(signature=signature).first()
+        # If it doesn't exist, create a job first
+        if failure is None:
+            failure = Failure(signature=signature)
+            failure.type = TYPE[type]
+
+        failure_instance = FailureInstance(url=self.url,
+                                           job_name=self.job_name)
+        failure_instance.process_build_info(self.build_info)
+        failure_instance.failure = failure
+        try:
+            db.session.add(failure)
+            db.session.add(failure_instance)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
 
 def get_summary(job_name, num_days):
@@ -84,6 +98,8 @@ def get_summary(job_name, num_days):
                 # stop when timestamp older than cut off date
                 return
             if build['result'] not in [None, 'SUCCESS']:
-                url = ''.join([build['url'], 'consoleText'])
-                if not FailureInstance.query.filter_by(url=url).first():
-                    process_failure(url, job_name, build)
+                failure = FailureParser(build, job_name)
+                failure.process_failure()
+                # url = ''.join([build['url'], 'consoleText'])
+                # if not FailureInstance.query.filter_by(url=url).first():
+                    # process_failure(url, job_name, build)

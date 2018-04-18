@@ -49,13 +49,13 @@
         {% for failure in failures %}
         <tr>
           <td>
-            {% if failure["state"] == 3 %}
-              <div class="tag tag-warning">
-                <span class="glyphicon glyphicon-remove"></span>
-              </div>
-            {% elif failure["state"] == 2 %}
+            {% if failure["type"] == 1 %}
               <div class="tag tag-danger">
                 <span class="glyphicon glyphicon-fire"></span>
+              </div>
+            {% elif failure["type"] == 2 %}
+              <div class="tag tag-warning">
+                <span class="glyphicon glyphicon-time"></span>
               </div>
             {% endif %}
           </td>

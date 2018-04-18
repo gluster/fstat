@@ -1,8 +1,8 @@
+import re
+from datetime import timedelta, datetime
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from sqlalchemy.exc import IntegrityError
-import re
-from datetime import timedelta, datetime
 from fstat import app, db, Failure, FailureInstance
 
 
@@ -41,7 +41,7 @@ def process_failure(url, job_name, build_info):
         # Reversing the array to catch the last ran test because of which the run got aborted
         lines.reverse()
         for line in lines:
-            test_case = re.search('\./tests/.*\.t', line)
+            test_case = re.search(r'\./tests/.*\.t', line)
             if test_case:
                 save_failure(test_case.group(), url, job_name, build_info)
                 break
@@ -50,10 +50,15 @@ def process_failure(url, job_name, build_info):
             if t.find("Result: FAIL") != -1:
                 for t2 in accum:
                     if t2.find("Wstat") != -1:
-                        test_case = re.search('\./tests/.*\.t', t2)
+                        test_case = re.search(r'\./tests/.*\.t', t2)
                         if test_case:
-                            save_failure(test_case.group(), url, job_name, build_info)
+                            save_failure(test_case.group(), url, job_name,
+                                         build_info)
                 accum = []
+            if t.find("timed out after") != -1:
+                test_case = re.search(r'\./tests/.*\.t', t)
+                if test_case:
+                    save_failure(test_case.group(), url, job_name, build_info)
             else:
                 accum.append(t)
 
@@ -66,13 +71,13 @@ def get_summary(job_name, num_days):
     cut_off_date = datetime.today() - timedelta(days=num_days)
     for page in xrange(0, app.config['JENKINS_MAX'], 100):
         build_info = requests.get(''.join([
-                app.config['JENKINS_URL'],
-                '/job/',
-                job_name,
-                '/'
-                'api/json?depth=1&tree=allBuilds'
-                '[url,result,timestamp,builtOn,actions[parameters[value]]]',
-                '{{{0},{1}}}'.format(page, page+100)
+            app.config['JENKINS_URL'],
+            '/job/',
+            job_name,
+            '/'
+            'api/json?depth=1&tree=allBuilds'
+            '[url,result,timestamp,builtOn,actions[parameters[value]]]',
+            '{{{0},{1}}}'.format(page, page+100)
         ]), verify=False).json()
         for build in build_info.get('allBuilds'):
             if datetime.fromtimestamp(build['timestamp']/1000) < cut_off_date:

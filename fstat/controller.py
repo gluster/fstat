@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, request, session, g, jsoni
 from sqlalchemy import func, desc
 
 from fstat import app, db, github
-from model import Failure, FailureInstance, User, BugFailure
-from lib import parse_end_date, parse_start_date, organization_access_required, get_branch_list
+from .model import Failure, FailureInstance, User, BugFailure
+from .lib import parse_end_date, parse_start_date, organization_access_required, get_branch_list
 
 
 @github.access_token_getter

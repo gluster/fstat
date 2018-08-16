@@ -13,7 +13,7 @@ TYPE = {
 }
 
 
-class FailureParser:
+class FailureParser(object):
 
     def __init__(self, build_info, job_name):
         self.url = ''.join([build_info['url'], 'consoleText'])
@@ -100,6 +100,3 @@ def get_summary(job_name, num_days):
             if build['result'] not in [None, 'SUCCESS']:
                 failure = FailureParser(build, job_name)
                 failure.process_failure()
-                # url = ''.join([build['url'], 'consoleText'])
-                # if not FailureInstance.query.filter_by(url=url).first():
-                    # process_failure(url, job_name, build)

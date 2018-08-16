@@ -1,5 +1,5 @@
-from fstat import db
 from datetime import datetime
+from fstat import db
 
 
 class User(db.Model):

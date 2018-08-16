@@ -12,5 +12,5 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 github = GitHub(app)
 
-from controller import index  # noqa: E402,F401
-from model import Failure, FailureInstance  # noqa: E402,F401
+from .controller import index  # noqa: E402,F401
+from .model import Failure, FailureInstance  # noqa: E402,F401

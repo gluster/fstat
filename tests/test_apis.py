@@ -25,7 +25,7 @@ class TestRestfulApis(unittest.TestCase):
         assert response.status_code == 200
         data = json.loads(response.data)
         assert len(data['response']) > 0
-        expected_keys = ['id', 'state', 'signature', 'bugs', 'failure_count']
+        expected_keys = ['id', 'type', 'signature', 'bugs', 'failure_count']
         for key in expected_keys:
             assert key in data['response'][0]
 

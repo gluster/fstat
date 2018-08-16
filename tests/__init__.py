@@ -13,7 +13,7 @@ class FailureFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
 
     signature = factory.Faker('text')
-    state = 2
+    type = 1
 
 
 class FailureInstanceFactory(factory.alchemy.SQLAlchemyModelFactory):

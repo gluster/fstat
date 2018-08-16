@@ -69,7 +69,7 @@ def get_branch_list(fid=None):
                 .distinct()
 
     return db.session.query(FailureInstance.branch) \
-            .filter(FailureInstance.failure_id == fid,
-                    FailureInstance.branch.isnot(None)) \
-            .order_by(FailureInstance.branch) \
-            .distinct()
+        .filter(FailureInstance.failure_id == fid,
+                FailureInstance.branch.isnot(None)) \
+        .order_by(FailureInstance.branch) \
+        .distinct()

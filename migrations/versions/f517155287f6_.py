@@ -20,8 +20,26 @@ def upgrade():
     op.alter_column('bug_failure', 'created_at',
                existing_type=postgresql.TIMESTAMP(),
                nullable=True)
-    op.add_column('failure', sa.Column('type', sa.Integer(), nullable=True, default=0))
+
+    op.add_column('failure', sa.Column('type', sa.Integer(), nullable=True, default=1))
+
+    copy_state_to_type()
+
     op.drop_column('failure', 'state')
+
+
+def copy_state_to_type():
+    # create local table objects from the current state of the DB
+    failure_table = sa.Table('failure', sa.MetaData(bind=op.get_bind()), autoload=True)
+
+    # copy DB data
+    op.get_bind().execute(
+        failure_table.update().values(
+            type=1
+        ).where(
+            failure_table.c.state == 2
+        )
+    )
 
 
 def downgrade():

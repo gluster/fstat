@@ -74,6 +74,7 @@ def get_branch_list(fid=None):
         .order_by(FailureInstance.branch) \
         .distinct()
 
+
 def get_job_list(fid=None):
     """
     Get the list of jobs to populate the drop down

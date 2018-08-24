@@ -3,7 +3,13 @@ from sqlalchemy import func, desc
 
 from fstat import app, db, github
 from .model import Failure, FailureInstance, User, BugFailure
-from .lib import parse_end_date, parse_start_date, organization_access_required, get_branch_list, get_job_list
+from .lib import (
+        parse_end_date,
+        parse_start_date,
+        organization_access_required,
+        get_branch_list,
+        get_job_list,
+)
 
 
 @github.access_token_getter
@@ -99,7 +105,6 @@ def overall_summary():
 
     if job != 'all':
         filters.append(FailureInstance.job_name == job)
-
 
     failures = Failure.query \
                       .with_entities(Failure.id, Failure.signature,

@@ -31,11 +31,14 @@
     <h2>Overall Summary</h2>
     {% set range = [start_date, '-', end_date] %}
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         {% include "snippets/date_range.html" %}
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         {% include "snippets/branch_filter.html" %}
+      </div>
+      <div class="col-xs-4">
+        {% include "snippets/job_filter.html" %}
       </div>
     </div>
     <div class="table-responsive">

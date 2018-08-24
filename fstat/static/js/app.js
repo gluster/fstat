@@ -46,4 +46,16 @@
                 }
         }
     };
+    var switcher = document.getElementsByClassName('switcher');
+    for (i = 0; i < switcher.length; i++) {
+        switcher[i].addEventListener('change', function() {
+            var params = new URLSearchParams(window.location.search);
+            var key = this.id.split('-dropdown');
+            if (key.length == 2) {
+              key = key[0].split('#')[1];
+            }
+            params.set(key, this.value);
+            window.location.search = params.toString();
+        });
+    }
 }());

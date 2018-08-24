@@ -1,0 +1,8 @@
+<h3 style="padding:0;margin-bottom:0;">Job</h3>
+<select class="form-control switcher" id="#job-dropdown">
+  {{ request.args }}
+  <option value="all">All</option>
+  {% for j in jobs %}
+  <option value="{{j[0]}}" {%- if request.args.get('job') == j[0] -%}selected{%- endif %}>{{j[0]}}</option>
+  {% endfor %}
+</select>

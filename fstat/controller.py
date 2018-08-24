@@ -3,7 +3,7 @@ from sqlalchemy import func, desc
 
 from fstat import app, db, github
 from .model import Failure, FailureInstance, User, BugFailure
-from .lib import parse_end_date, parse_start_date, organization_access_required, get_branch_list
+from .lib import parse_end_date, parse_start_date, organization_access_required, get_branch_list, get_job_list
 
 
 @github.access_token_getter
@@ -87,6 +87,7 @@ def overall_summary():
     start_date = parse_start_date(request.args.get('start_date'))
     end_date = parse_end_date(request.args.get('end_date'))
     branch = request.args.get('branch', 'all')
+    job = request.args.get('job', 'all')
 
     filters = [
         FailureInstance.timestamp > start_date,
@@ -95,6 +96,10 @@ def overall_summary():
 
     if branch != 'all':
         filters.append(FailureInstance.branch == branch)
+
+    if job != 'all':
+        filters.append(FailureInstance.job_name == job)
+
 
     failures = Failure.query \
                       .with_entities(Failure.id, Failure.signature,
@@ -118,6 +123,7 @@ def overall_summary():
                            failures=summary,
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),
+                           jobs=get_job_list(),
                            branches=get_branch_list())
 
 
@@ -154,6 +160,7 @@ def instance_summary(fid=None):
     return render_template('failure_instance.html',
                            failure=failure,
                            branches=get_branch_list(fid),
+                           jobs=get_job_list(fid),
                            failure_instances=failure_instances,
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),

@@ -73,3 +73,19 @@ def get_branch_list(fid=None):
                 FailureInstance.branch.isnot(None)) \
         .order_by(FailureInstance.branch) \
         .distinct()
+
+def get_job_list(fid=None):
+    """
+    Get the list of jobs to populate the drop down
+    """
+    if not fid:
+        return db.session.query(FailureInstance.job_name) \
+                .filter(FailureInstance.job_name.isnot(None)) \
+                .order_by(FailureInstance.job_name) \
+                .distinct()
+
+    return db.session.query(FailureInstance.job_name) \
+        .filter(FailureInstance.failure_id == fid,
+                FailureInstance.job_name.isnot(None)) \
+        .order_by(FailureInstance.job_name) \
+        .distinct()

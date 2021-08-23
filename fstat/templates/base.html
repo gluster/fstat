@@ -67,6 +67,7 @@
 {% block navbar %}
 {#nav.frontend_top.render()#}
 <div class="container">
+{% if config.GITHUB_CLIENT_SECRET != "<GITHUB_CLIENT_SECRET>" %}
 <div class="login col-sm-2 col-sm-offset-10">
   {% if 'token' not in session %}
   <form action='/login' method='POST'>
@@ -90,6 +91,7 @@
 
   {% endif %}
 </div>
+{% endif %}
 </div>
 <div id="snackbar"></div>
 <style type="text/css">

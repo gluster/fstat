@@ -14,7 +14,7 @@
     <div class="jumbotron">
       <h1>Failure Instance Summary</h1>
     </div>
-          <h2>Failure Signature: <a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ failure.signature }}" target="_blank"><code class="failure-signature-main">{{ failure.signature }}</code></a>
+          <h2>Failure Signature: <a href="https://github.com/gluster/glusterfs/tree/devel/{{ failure.signature }}" target="_blank"><code class="failure-signature-main">{{ failure.signature }}</code></a>
             {% if request.args.get('state') == "2" %}
               <div class="tag tag-danger" style="display:inline-block">
                 <span class="glyphicon glyphicon-fire" style="top:3px"></span>

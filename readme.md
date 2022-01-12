@@ -17,6 +17,8 @@ Fstat tracks the failures from build.gluster.org.
 
 ## Consuming fstat data via rest apis
 
+Host: https://fstat.gluster.org
+
 ###  ``` /api/failures ```
 This endpoint is used to get list of failures with the number of failure instances. The available filters for this endpoint are as follows:
 
@@ -29,7 +31,7 @@ branch| filter for specific branch
 For Eg:
 
 ```
-GET /api/failures?start_date=2017-05-01&end_date=2017-08-01&branch=master
+GET https://fstat.gluster.org/api/failures?start_date=2017-05-01&end_date=2017-08-01&branch=master
 ```
 
 ### ``` /api/failures/<fid> ```
@@ -44,5 +46,5 @@ branch| filter for specific branch
 For Eg:
 
 ```
-GET /api/failures/1?start_date=2017-05-01&end_date=2017-08-01&branch=master
+GET https://fstat.gluster.org/api/failures/1?start_date=2017-05-01&end_date=2017-08-01&branch=master
 ```

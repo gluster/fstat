@@ -60,6 +60,10 @@
               <div class="tag tag-warning">
                 <span class="glyphicon glyphicon-time"></span>
               </div>
+            {% elif failure["type"] == 3 %}
+              <div class="tag tag-core">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+              </div>
             {% endif %}
           </td>
           <td><a href="https://github.com/gluster/glusterfs/tree/devel/{{ failure["signature"] }}" target="_blank"><code>{{ failure["signature"] }}</code></a></td>

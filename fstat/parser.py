@@ -10,6 +10,7 @@ TYPE = {
     'NONE': 0,
     'FAILURE': 1,
     'TIMEOUT': 2,
+    'COREDUMP': 3
 }
 
 
@@ -19,6 +20,7 @@ class FailureParser(object):
         self.url = ''.join([build_info['url'], 'consoleText'])
         self.job_name = job_name
         self.build_info = build_info
+        self.re = re.compile(r'\./tests/.*\.t')
 
     def is_parsed(self):
         if FailureInstance.query.filter_by(url=self.url).first():
@@ -43,7 +45,7 @@ class FailureParser(object):
             # If we find a line with failure, that means the test in the line we
             # wrote to test_line failed.
             if line.find("Result: FAIL") != -1:
-                test_case = re.search(r'\./tests/.*\.t', test_line)
+                test_case = self.re.search(test_line)
                 if test_case:
                     self.save_failure(test_case.group(), type='FAILURE')
             # If the test timed out the output looks like this:
@@ -54,9 +56,14 @@ class FailureParser(object):
             # something.t: bad status 124
 
             if line.find("timed out after") != -1:
-                test_case = re.search(r'\./tests/.*\.t', line)
+                test_case = self.re.search(line)
                 if test_case:
                     self.save_failure(test_case.group(), type='TIMEOUT')
+
+            if line.find("new core files") != -1:
+                test_case = self.re.search(line)
+                if test_case:
+                    self.save_failure(test_case.group(), type='COREDUMP')
 
     def save_failure(self, signature, type=None):
         failure = Failure.query.filter_by(signature=signature).first()

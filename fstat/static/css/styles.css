@@ -16,6 +16,10 @@ div.tag-warning {
     background: #ec971f
 }
 
+div.tag-core {
+    background: #994dbf
+}
+
 @media only screen {
     .failure-signature-main {
         font-size: 0.7em;
